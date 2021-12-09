@@ -5,6 +5,9 @@ metadata:
   namespace: openfaas
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq-connector
   template:
     metadata:
       labels:
@@ -59,18 +62,46 @@ spec:
             configMapKeyRef:
               name: rabbitmq-connector-configmap
               key: TOPIC_MAP_REFRESH_TIME
+        - name: PATH_TO_TOPOLOGY
+          value: "/var/topology/topology.yaml"
+        - name: TLS_ENABLED
+          value: "true"
+        - name: TLS_CA_CERT_PATH
+          value: "/var/ca-cert/cert.pem"
+        - name: TLS_SERVER_CERT_PATH
+          value: "/var/server-tls/cert.crt"
+        - name: TLS_SERVER_KEY_PATH
+          value: "/var/server-tls/key.key"
         resources: # Adjust them to suite your needs
           requests:
-            memory: 512Mi
-            cpu: 1
+            cpu: 250m
+            memory: .25Gi
           limits:
-            memory: 1024Mi
-            cpu: 2
+            cpu: 250m
+            memory: .25Gi
         volumeMounts:
-          - name: gateway-basic-auth
+          - name: basic-auth
             readOnly: true
             mountPath: "/etc/openfaas"
+          - name: topology
+            readOnly: true
+            mountPath: "/var/topology"
+          - name: ca-cert
+            readOnly: true
+            mountPath: "/var/ca-cert"
+          - name: server-tls
+            readOnly: true
+            mountPath: "/var/server-tls"
       volumes:
-        - name: gateway-basic-auth
+        - name: basic-auth
           secret:
-            secretName: gateway-basic-auth
+            secretName: basic-auth
+        - name: topology
+          configMap:
+            name: topology
+        - name: ca-cert
+          secret:
+            secretName: ca-cert
+        - name: server-tls
+          secret:
+            secretName: server-tls

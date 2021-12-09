@@ -197,7 +197,7 @@ func getRabbitMQConnectionURL(isTls bool) (string, error) {
 	}
 
 	if isTls {
-		return fmt.Sprintf("amqps://%s:%s/%s", host, port, vhost), nil
+		return fmt.Sprintf("amqps://%s:%s@%s:%s/%s", user, pass, host, port, vhost), nil
 	}
 
 	return fmt.Sprintf("amqp://%s:%s@%s:%s/%s", user, pass, host, port, vhost), nil
