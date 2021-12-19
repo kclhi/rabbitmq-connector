@@ -77,6 +77,7 @@ func (c *Client) InvokeSync(ctx context.Context, name string, invocation *intern
 		req.SetBody(nil)
 	}
 
+	req.Header.SetMethod("POST")
 	req.Header.Set("Content-Type", invocation.ContentType)
 	req.Header.Set("Content-Encoding", invocation.ContentEncoding)
 	req.Header.SetUserAgent("OpenFaaS - Rabbit MQ Connector")
@@ -118,6 +119,7 @@ func (c *Client) InvokeAsync(ctx context.Context, name string, invocation *inter
 		req.SetBody(nil)
 	}
 
+	req.Header.SetMethod("POST")
 	req.Header.Set("Content-Type", invocation.ContentType)
 	req.Header.Set("Content-Encoding", invocation.ContentEncoding)
 	req.Header.SetUserAgent("OpenFaaS - Rabbit MQ Connector")
